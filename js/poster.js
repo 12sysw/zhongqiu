@@ -121,6 +121,11 @@ class PosterGenerator {
     ctx.font = '20px "Kaiti SC", "KaiTi", serif';
     ctx.fillText('但愿人长久 · 千里共婵娟', width / 2, height - 90);
 
+    // 底部站点水印（收到海报的人可以回访）
+    ctx.fillStyle = 'rgba(255, 243, 205, 0.4)';
+    ctx.font = '16px "Kaiti SC", "KaiTi", serif';
+    ctx.fillText('· sxf.6666633.xyz ·', width / 2, height - 52);
+
     return canvas.toDataURL('image/png');
   }
 
@@ -164,7 +169,8 @@ class PosterGenerator {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    const t = (text || '吉祥如意').padEnd(4, '吉');
+    const src = text || '吉祥如意';
+    const t = src.length === 2 ? src + src : src.padEnd(4, '吉');
     // 古代印章阅读顺序：右上 -> 右下 -> 左上 -> 左下 (或常规顺排)
     ctx.fillText(t[0], size * 0.75, size * 0.3);
     ctx.fillText(t[1], size * 0.75, size * 0.75);

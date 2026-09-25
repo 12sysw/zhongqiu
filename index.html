@@ -3,110 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>中秋快乐 · 但愿人长久</title>
-  <meta name="description" content="一轮明月，万盏天灯。写一句心愿放飞天灯，定制专属中秋贺卡，送给牵挂的人。">
-  <meta name="theme-color" content="#070a1e">
-  <meta property="og:title" content="🏮 中秋快乐 · 但愿人长久，千里共婵娟">
-  <meta property="og:description" content="轻触夜空放飞天灯，还有月饼盲盒、猜灯谜。中秋快乐！">
+  <title>中秋佳节 · 花好月圆</title>
+  <meta name="description" content="一轮明月，万盏天灯。写一句心愿放飞天灯，定制专属高清中秋贺卡，送给牵挂的人。">
+  <meta name="theme-color" content="#0d1527">
+  <meta property="og:title" content="🏮 中秋佳节 · 花好月圆">
+  <meta property="og:description" content="但愿人长久，千里共婵娟。放一盏天灯，拆一盒月饼，猜一则灯谜。中秋快乐！">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23070a1e'/%3E%3Ccircle cx='50' cy='48' r='27' fill='%23ffd166'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230d1527'/%3E%3Ccircle cx='50' cy='48' r='27' fill='%23fbd369'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
-  <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="mood-midnight">
 
-  <!-- 夜空画布：星辰、明月、天灯、桂花 -->
+  <!-- 背景动态画布：星辰、天灯、桂花、流星（月亮为 DOM 元素，省性能） -->
   <canvas id="sky-canvas"></canvas>
 
-  <div class="page-container">
+  <main class="app-container">
 
-    <!-- 顶栏 -->
+    <!-- 顶部：良辰印记 -->
     <header class="header-bar">
       <div class="festival-badge">
-        <span class="badge-icon">🏮</span>
-        <span>丙午年 · 中秋佳节</span>
-      </div>
-      <div class="top-actions">
-        <button class="icon-btn" id="sharePageBtn">🔗 分享</button>
-        <button class="icon-btn" data-modal="deployModal">🌐 部署</button>
+        <span class="badge-dot"></span>
+        <span>丙午年 · 农历八月十五 · 中秋良辰</span>
       </div>
     </header>
 
     <!-- 主视觉 -->
     <section class="hero-section">
-      <div class="moon-calligraphy-title">
-        <h1>中秋快乐</h1>
-      </div>
-      <p class="sub-poetry">但愿人长久 · 千里共婵娟</p>
-      <p class="poetry-author">—— 宋 · 苏轼《水调歌头》</p>
 
-      <div class="quick-wish-bar">
-        <input id="wishInput" maxlength="16" placeholder="写一句心愿，放飞一盏天灯…" aria-label="心愿">
-        <button class="fly-btn" id="flyBtn">🏮 放灯</button>
+      <!-- 皓月与玉兔（可点击） -->
+      <div class="moon-wrapper" id="moonTarget" title="轻点明月，许个心愿">
+        <div class="moon">
+          <div class="moon-crater crater-1"></div>
+          <div class="moon-crater crater-2"></div>
+          <div class="moon-crater crater-3"></div>
+          <div class="moon-crater crater-4"></div>
+          <div class="moon-clouds"></div>
+        </div>
+        <div class="moon-silhouette">
+          <svg class="rabbit-svg" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M5,95 Q30,65 50,75 T80,50" stroke="#fbd369" stroke-width="2.5" fill="none" opacity="0.45"/>
+            <path d="M48,88 C44,82 42,75 48,70 C51,67 56,66 59,70 C63,65 67,52 69,45 C70,42 74,43 73,48 C72,53 69,63 71,67 C74,66 77,55 79,48 C81,46 84,48 82,53 C80,60 76,71 77,75 C82,78 84,85 78,89 C70,93 54,93 48,88 Z" fill="#2d1c3a"/>
+            <circle cx="45" cy="85" r="4.5" fill="#2d1c3a"/>
+          </svg>
+        </div>
       </div>
+
+      <!-- 节日文案 -->
+      <div class="title-group">
+        <div class="festival-sub">Mid-Autumn Festival · 丙午年</div>
+        <h1 class="festival-main-title">中秋佳节 · 花好月圆</h1>
+        <div class="poetry-box">
+          <p>「但愿人长久，千里共婵娟」</p>
+          <span class="poetry-author">—— [宋] 苏轼《水调歌头》</span>
+        </div>
+      </div>
+
+      <!-- 快捷许愿 -->
+      <div class="wish-bar">
+        <input id="wishInput" maxlength="16" placeholder="写一句心愿，放飞一盏天灯…" aria-label="心愿">
+        <button class="wish-fly-btn" id="flyBtn">🏮 放灯</button>
+      </div>
+
+      <!-- 功能入口 -->
+      <nav class="interactive-nav">
+        <button class="nav-card" id="musicToggle">
+          <span class="nav-icon">🎵</span>
+          <span class="nav-title">背景雅音</span>
+          <span class="nav-desc">五声古筝 · 悠然自得</span>
+        </button>
+        <button class="nav-card featured" data-modal="cardModal">
+          <span class="nav-icon">💌</span>
+          <span class="nav-title">定制中秋贺卡</span>
+          <span class="nav-desc">高清海报 · 赠予亲友</span>
+        </button>
+        <button class="nav-card" data-modal="mooncakeModal">
+          <span class="nav-icon">🥮</span>
+          <span class="nav-title">月饼盲盒</span>
+          <span class="nav-desc">掰开纳福 · 运势签文</span>
+        </button>
+        <button class="nav-card" data-modal="riddleModal">
+          <span class="nav-icon">✨</span>
+          <span class="nav-title">中秋猜灯谜</span>
+          <span class="nav-desc">巧破玄机 · 雅趣横生</span>
+        </button>
+      </nav>
+
+      <div class="sky-hint-text">💡 轻触夜空绽放星芒，轻点升空的天灯可拆阅祈愿</div>
     </section>
 
-    <!-- 底部功能坞 -->
-    <nav class="bottom-dock">
-      <button class="dock-btn featured" data-modal="cardModal">✉️ 定制贺卡</button>
-      <button class="dock-btn" data-modal="mooncakeModal">🥮 月饼盲盒</button>
-      <button class="dock-btn" data-modal="riddleModal">🏮 猜灯谜</button>
-    </nav>
+    <!-- 底部寄语 -->
+    <footer class="footer-section">
+      <p class="footer-quote">海上生明月 · 天涯共此时</p>
+      <p class="footer-blessing">愿所念之人，皆在身旁；所求之事，皆如所愿 · 中秋吉庆平安</p>
+    </footer>
 
-  </div>
+  </main>
 
-  <!-- 贺卡定制弹窗 -->
+  <!-- 弹窗：定制中秋贺卡 -->
   <div class="modal-overlay" id="cardModal">
-    <div class="modal-card">
-      <button class="modal-close-btn" data-close aria-label="关闭">×</button>
-      <div class="modal-header">
-        <div class="modal-title">定制中秋贺卡</div>
-        <p class="modal-subtitle">写下称呼与落款，生成专属链接送给牵挂的人</p>
-      </div>
+    <div class="modal-content">
+      <button class="modal-close-btn" data-close aria-label="关闭">&times;</button>
+      <h2 class="modal-title">💌 定制专属中秋贺卡</h2>
+      <p class="modal-subtitle">写下称呼与祝福，生成专属链接或高清海报，送给牵挂的人</p>
 
-      <div class="card-preview-wrapper">
-        <div class="blessing-card-preview">
-          <div class="card-inner-border">
-            <p class="card-recipient" id="previewTo">亲爱的朋友：</p>
-            <p class="card-body-text" id="previewMsg"></p>
-            <div class="card-footer-info">
-              <span class="card-sender" id="previewFrom"></span>
-              <span class="chinese-seal">花好<br>月圆</span>
+      <div class="card-preview-container">
+        <div class="greeting-card-preview">
+          <div class="card-corner-ornament top-left"></div>
+          <div class="card-corner-ornament top-right"></div>
+          <div class="card-corner-ornament bottom-left"></div>
+          <div class="card-corner-ornament bottom-right"></div>
+          <div class="card-inner-border"></div>
+          <div class="card-watermark-moon"></div>
+          <div class="card-header-art"><span class="card-top-tag">中秋佳节 · 花好月圆</span></div>
+          <div class="card-main-content">
+            <div id="previewTo" class="card-to">致：亲爱的朋友</div>
+            <div id="previewMsg" class="card-body-text"></div>
+          </div>
+          <div class="card-footer">
+            <div>
+              <div id="previewFrom" class="card-from"></div>
+              <div class="card-date">农历八月十五 · 中秋寄福</div>
             </div>
+            <div class="seal-stamp">团圆</div>
           </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="inTo">TA 的称呼</label>
-        <input class="form-input" id="inTo" maxlength="12" placeholder="如：妈妈 / 老王 / 亲爱的">
+      <div class="card-form-grid">
+        <div class="form-group">
+          <label class="form-label" for="inTo">TA 的称呼</label>
+          <input class="form-input" id="inTo" maxlength="12" placeholder="如：妈妈 / 老王 / 亲爱的">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inFrom">你的落款</label>
+          <input class="form-input" id="inFrom" maxlength="12" placeholder="留空则不显示落款">
+        </div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="inFrom">你的落款</label>
-        <input class="form-input" id="inFrom" maxlength="12" placeholder="留空则不显示落款">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="inMsg">祝福语（点选或自写）</label>
+        <label class="form-label" for="inMsg">祝福正文（点选或自写）</label>
         <textarea class="form-textarea" id="inMsg" rows="3" maxlength="60"></textarea>
-        <div class="tag-cloud" id="blessingTags"></div>
+        <div class="quick-tags" id="blessingTags"></div>
       </div>
 
-      <div class="action-grid">
-        <button class="secondary-btn" id="shareBtn">📤 直接分享</button>
-        <button class="primary-btn" id="copyLinkBtn">🔗 复制专属链接</button>
+      <div class="card-action-bar">
+        <button class="btn-primary" id="copyLinkBtn">🔗 复制专属链接</button>
+        <button class="btn-secondary" id="makePosterBtn">🖼 生成海报</button>
+        <button class="btn-secondary" id="shareBtn">📤 直接分享</button>
       </div>
     </div>
   </div>
 
-  <!-- 月饼盲盒弹窗 -->
-  <div class="modal-overlay" id="mooncakeModal">
-    <div class="modal-card">
-      <button class="modal-close-btn" data-close aria-label="关闭">×</button>
-      <div class="modal-header">
-        <div class="modal-title">月饼盲盒</div>
-        <p class="modal-subtitle">掰开一块月饼，看看今年属于你的运势</p>
+  <!-- 弹窗：祝福海报 -->
+  <div class="modal-overlay" id="posterModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" data-close aria-label="关闭">&times;</button>
+      <h2 class="modal-title">🖼 祝福海报</h2>
+      <p class="modal-subtitle">长按图片保存，发给 TA 或晒朋友圈</p>
+      <img class="poster-img" id="posterImg" alt="中秋祝福海报">
+      <div class="card-action-bar">
+        <a class="btn-primary" id="posterDownload" download="中秋祝福.png">📥 保存图片</a>
       </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：月饼盲盒 -->
+  <div class="modal-overlay" id="mooncakeModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" data-close aria-label="关闭">&times;</button>
+      <h2 class="modal-title">🥮 月饼盲盒</h2>
+      <p class="modal-subtitle">掰开一块月饼，看看今年属于你的运势</p>
 
       <div class="mooncake-grid" id="mooncakeGrid">
         <button class="mooncake-item">
@@ -145,67 +212,39 @@
       </div>
 
       <div class="blindbox-result" id="blindboxResult" style="display:none">
-        <div class="fortune-level" id="fortuneLevel"></div>
+        <div class="fortune-sign-badge" id="fortuneLevel"></div>
         <p class="fortune-desc" id="fortuneDesc"></p>
         <p class="fortune-poetry" id="fortunePoetry"></p>
       </div>
     </div>
   </div>
 
-  <!-- 灯谜弹窗 -->
+  <!-- 弹窗：猜灯谜 -->
   <div class="modal-overlay" id="riddleModal">
-    <div class="modal-card">
-      <button class="modal-close-btn" data-close aria-label="关闭">×</button>
-      <div class="modal-header">
-        <div class="modal-title">中秋灯谜</div>
-        <p class="modal-subtitle">开动脑筋，猜中就有好运</p>
-      </div>
+    <div class="modal-content">
+      <button class="modal-close-btn" data-close aria-label="关闭">&times;</button>
+      <h2 class="modal-title">🏮 中秋猜灯谜</h2>
+      <p class="modal-subtitle">花灯摇曳，巧解玄机，猜中就有好运</p>
 
-      <div class="riddle-container">
-        <div class="riddle-lantern-icon">🏮</div>
+      <div class="riddle-card">
         <p class="riddle-question" id="riddleQuestion"></p>
         <p class="riddle-hint" id="riddleHint"></p>
       </div>
 
-      <div class="action-grid">
-        <button class="secondary-btn" id="revealBtn">👁 揭晓答案</button>
-        <button class="primary-btn" id="nextRiddleBtn">🔄 换一个</button>
+      <div class="card-action-bar">
+        <button class="btn-secondary" id="revealBtn">👁 揭晓答案</button>
+        <button class="btn-primary" id="nextRiddleBtn">🔄 换一个</button>
       </div>
       <div class="riddle-answer-box" id="riddleAnswerBox"></div>
     </div>
   </div>
 
-  <!-- 部署指引弹窗 -->
-  <div class="modal-overlay" id="deployModal">
-    <div class="modal-card">
-      <button class="modal-close-btn" data-close aria-label="关闭">×</button>
-      <div class="modal-header">
-        <div class="modal-title">部署到你的域名</div>
-        <p class="modal-subtitle">把这份祝福挂到互联网上</p>
-      </div>
-
-      <div class="domain-guide-box">
-        <h3>⚡ Cloudflare Pages 命令行（推荐）</h3>
-        <p>在本文件夹执行：</p>
-        <span class="domain-code-badge">npx wrangler pages deploy . --project-name=zhongqiu</span>
-        <p>首次会引导登录 Cloudflare 账号；之后每次更新重跑这条命令即可。</p>
-      </div>
-
-      <div class="domain-guide-box">
-        <h3>🖱 网页拖拽上传</h3>
-        <ol>
-          <li>登录 Cloudflare Dashboard → Workers 和 Pages → 创建 → Pages</li>
-          <li>选择「直接上传」，把本文件夹整个拖进去（含 index.html、css、js）</li>
-          <li>部署完成后，进入项目 → 自定义域 → 绑定你的域名</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-
-  <!-- 全局提示气泡 -->
+  <!-- 全局提示 -->
   <div class="toast-msg" id="toastMsg" role="status"></div>
 
   <script src="js/sky.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/poster.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

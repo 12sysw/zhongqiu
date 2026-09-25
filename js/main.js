@@ -1,5 +1,5 @@
 /**
- * 页面交互逻辑：弹窗、快速放灯、贺卡定制与分享、月饼盲盒、灯谜
+ * 页面交互逻辑：弹窗、快速放灯、雅乐控制、贺卡定制与分享、祝福海报、月饼盲盒、灯谜
  */
 (function () {
   'use strict';
@@ -22,16 +22,51 @@
     toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
   };
 
-  /* ---------- 点月亮彩蛋 ---------- */
+  /* ---------- 雅乐（Web Audio 古筝）与音效 ---------- */
+  var audio = window.midAutumnAudio || null;
+  var musicCard = document.getElementById('musicToggle');
+  var musicDesc = musicCard ? musicCard.querySelector('.nav-desc') : null;
+  var musicOn = false;
+
+  function setMusic(on) {
+    musicOn = on;
+    if (audio) {
+      audio.isMuted = !on;
+      if (on) audio.startBGM();
+      else audio.stopBGM();
+    }
+    if (musicCard) musicCard.classList.toggle('active', on);
+    if (musicDesc) musicDesc.textContent = on ? '古筝悠扬 · 奏鸣中' : '五声古筝 · 悠然自得';
+  }
+
+  if (musicCard) {
+    musicCard.addEventListener('click', function () { setMusic(!musicOn); });
+  }
+  // 首次触摸自动起乐（浏览器自动播放策略要求先有一次交互；若首次点的就是音乐卡则交给它自己处理）
+  function firstTap(e) {
+    document.removeEventListener('pointerdown', firstTap);
+    if (!(e.target && e.target.closest && e.target.closest('#musicToggle'))) setMusic(true);
+  }
+  document.addEventListener('pointerdown', firstTap);
+
+  /* ---------- 轻点明月彩蛋 ---------- */
   var moonQuotes = [
     '🌕 今晚的月色，是专门为你点的灯',
     '🐇 玉兔捎话：好事将近',
     '✨ 但愿人长久，千里共婵娟',
     '🥮 月亮说：它也想吃月饼了'
   ];
-  window.onMoonClick = function () {
-    showToast(moonQuotes[Math.floor(Math.random() * moonQuotes.length)]);
-  };
+  var moonEl = document.getElementById('moonTarget');
+  if (moonEl) {
+    moonEl.addEventListener('pointerdown', function () {
+      if (audio) audio.playChime(0.8);
+      if (sky) {
+        var r = moonEl.getBoundingClientRect();
+        sky.createSparkleBurst(r.left + r.width / 2, r.top + r.height / 2, 36);
+      }
+      showToast(moonQuotes[Math.floor(Math.random() * moonQuotes.length)]);
+    });
+  }
 
   /* ---------- 弹窗系统 ---------- */
   function openModal(id) {
@@ -62,6 +97,7 @@
   function releaseWish() {
     var text = (wishInput.value || '').trim() || '阖家团圆';
     if (sky) sky.addCustomLantern(text);
+    if (audio) audio.playChime(1.2);
     showToast('🏮 天灯已带着「' + text.slice(0, 8) + '」升空');
     wishInput.value = '';
   }
@@ -88,7 +124,7 @@
   blessings.forEach(function (b) {
     var t = document.createElement('button');
     t.type = 'button';
-    t.className = 'tag-btn';
+    t.className = 'quick-tag';
     t.textContent = '「' + b.slice(0, 6) + '…」';
     t.addEventListener('click', function () { inMsg.value = b; renderPreview(); });
     tagCloud.appendChild(t);
@@ -104,7 +140,7 @@
   inMsg.value = (params.get('msg') || DEFAULT_MSG).slice(0, 60);
 
   function renderPreview() {
-    previewTo.textContent = (inTo.value.trim() || '亲爱的朋友') + '：';
+    previewTo.textContent = '致：' + (inTo.value.trim() || '亲爱的朋友');
     previewMsg.textContent = inMsg.value.trim() || DEFAULT_MSG;
     var f = inFrom.value.trim();
     previewFrom.textContent = f ? ('—— ' + f) : '';
@@ -164,6 +200,21 @@
     }
   });
 
+  /* ---------- 祝福海报 ---------- */
+  document.getElementById('makePosterBtn').addEventListener('click', function () {
+    if (!window.PosterGenerator) { showToast('海报生成暂不可用'); return; }
+    var url = PosterGenerator.generateCardImage({
+      recipient: inTo.value.trim() || '亲爱的朋友',
+      message: inMsg.value.trim() || DEFAULT_MSG,
+      sender: inFrom.value.trim(),
+      sealText: '花好月圆'
+    });
+    document.getElementById('posterImg').src = url;
+    document.getElementById('posterDownload').href = url;
+    openModal('posterModal');
+    if (audio) audio.playChime(1.5);
+  });
+
   // 带称呼的链接打开时，自动亮出贺卡
   if (params.get('to')) {
     setTimeout(function () { openModal('cardModal'); }, 900);
@@ -172,10 +223,10 @@
 
   /* ---------- 月饼盲盒 ---------- */
   var fortunes = [
-    { level: '上上签 · 大吉', desc: '好事连连，团圆美满，心之所向，皆有回响。', poem: '月满则福至，人安即好时。' },
-    { level: '上签 · 吉', desc: '贵人相助，所愿皆有所成，只需稳步向前。', poem: '清风随行处，明月照归途。' },
-    { level: '上签 · 吉', desc: '家庭和睦，笑口常开，健康常伴左右。', poem: '灯火可亲处，团圆自有期。' },
-    { level: '中平签 · 稳', desc: '平稳安顺，宜沉淀蓄力，静待花开。', poem: '守得云开处，自见月明时。' }
+    { level: '上上签 · 大吉', desc: '好事连连，团圆美满，心之所向，皆有回响。', poem: '「月满则福至，人安即好时。」' },
+    { level: '上签 · 吉', desc: '贵人相助，所愿皆有所成，只需稳步向前。', poem: '「清风随行处，明月照归途。」' },
+    { level: '上签 · 吉', desc: '家庭和睦，笑口常开，健康常伴左右。', poem: '「灯火可亲处，团圆自有期。」' },
+    { level: '中平签 · 稳', desc: '平稳安顺，宜沉淀蓄力，静待花开。', poem: '「守得云开处，自见月明时。」' }
   ];
   var boxResult = document.getElementById('blindboxResult');
   var fortuneLevel = document.getElementById('fortuneLevel');
@@ -190,13 +241,14 @@
       var f = fortunes[i];
       fortuneLevel.textContent = f.level;
       fortuneDesc.textContent = f.desc;
-      fortunePoetry.textContent = '「' + f.poem + '」';
+      fortunePoetry.textContent = f.poem;
       boxResult.style.display = '';
       // 重新触发淡入动画
       boxResult.style.animation = 'none';
       void boxResult.offsetWidth;
       boxResult.style.animation = '';
       if (sky) sky.createSparkleBurst(window.innerWidth / 2, window.innerHeight / 2, 24);
+      if (audio) audio.playGong();
     });
   });
 
@@ -227,15 +279,6 @@
   });
   document.getElementById('nextRiddleBtn').addEventListener('click', nextRiddle);
   nextRiddle();
-
-  /* ---------- 顶栏分享 ---------- */
-  document.getElementById('sharePageBtn').addEventListener('click', function () {
-    if (navigator.share) {
-      navigator.share({ title: document.title, text: '但愿人长久，千里共婵娟', url: location.href }).catch(function () {});
-    } else {
-      copyText(location.href, '🔗 页面链接已复制');
-    }
-  });
 
   /* ---------- 收到祝福时的署名提示 ---------- */
   var fromParam = params.get('from');
